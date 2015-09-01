@@ -84,7 +84,7 @@ install_metasploit ()
   su -c $BASEACCT -c "echo \"gem: --no-ri --no-rdoc\" >> /home/$BASEACCT/.gemrc"
   su -c $BASEACCT -c "echo \"install: --no-rdoc --no-ri\" >> /home/$BASEACCT/.gemrc"
   su -c $BASEACCT -c "echo \"update:  --no-rdoc --no-ri\" >> /home/$BASEACCT/.gemrc"
-  cp /vagrant/shell-scripts/gemrc "/home/$BASEACCT/.gemrc"
+  cp /tmp/shell-scripts/gemrc "/home/$BASEACCT/.gemrc"
   cd metasploit
   echo "Install metasploit dependencies"
   apt-get -y install libpq-dev libxml2-dev libxslt1-dev libpcap-dev
@@ -142,11 +142,11 @@ install_exercises ()
   sudo apt-get -y install execstack
 
   # Install the stack examples
-  for i in `ls /vagrant/appsec2/stack*.c` ; do
+  for i in `ls /tmp/appsec2/stack*.c` ; do
 	create_user_acct $i:t:r
 	cp $i /home/$i:t:r/
-	cp /vagrant/appsec2/Makefile-$i:t:r /home/$i:t:r/Makefile
-	#cp /vagrant/appsec2/$i:t:r-key.txt /home/$i:t:r/key.txt
+	cp /tmp/appsec2/Makefile-$i:t:r /home/$i:t:r/Makefile
+	#cp /tmp/appsec2/$i:t:r-key.txt /home/$i:t:r/key.txt
 	#su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r ; chmod 400 key.txt"
 	chown $i:t:r:$i:t:r /home/$i:t:r/*
 	su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r"
@@ -154,11 +154,11 @@ install_exercises ()
   done
 
   # Install the format string examples
-  for i in `ls /vagrant/appsec2/format*.c` ; do
+  for i in `ls /tmp/appsec2/format*.c` ; do
 	create_user_acct $i:t:r
 	cp $i /home/$i:t:r/
-	cp /vagrant/appsec2/Makefile-$i:t:r /home/$i:t:r/Makefile
-	#cp /vagrant/appsec2/$i:t:r-key.txt /home/$i:t:r/key.txt
+	cp /tmp/appsec2/Makefile-$i:t:r /home/$i:t:r/Makefile
+	#cp /tmp/appsec2/$i:t:r-key.txt /home/$i:t:r/key.txt
 	#su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r ; chmod 400 key.txt"
 	chown $i:t:r:$i:t:r /home/$i:t:r/*
 	su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r"
@@ -166,10 +166,10 @@ install_exercises ()
   done
 
   # Install the reverse engineering bomb
-  for i in `ls /vagrant/appsec2/rev*` ; do 
+  for i in `ls /tmp/appsec2/rev*` ; do 
 	create_user_acct $i:t:r
 	cp $i /home/$i:t:r/
-	cp /vagrant/appsec2/README-$i:t:r.txt /home/$i:t:r/README.txt
+	cp /tmp/appsec2/README-$i:t:r.txt /home/$i:t:r/README.txt
 	chown $i:t:r:$i:t:r /home/$i:t:r/*
 	chmod a+x /home/$i:t:r/$i:t:r
 #	usermod -s /usr/sbin/nologin $i:t:r
@@ -184,7 +184,7 @@ install_gera()
 	  chown $BASEACCT:$BASEACCT /home/$BASEACCT/geras-insecure-programming
   fi
 
-  su - $BASEACCT -c "cp -R /vagrant/appsec2/gera/*.c /home/$BASEACCT/geras-insecure-programming"
+  su - $BASEACCT -c "cp -R /tmp/appsec2/gera/*.c /home/$BASEACCT/geras-insecure-programming"
 }
 
 update
@@ -196,5 +196,5 @@ install_checksec
 install_metasploit
 install_rev_tools
 perm_disable_aslr
-#install_exercises
+install_exercises
 install_gera
