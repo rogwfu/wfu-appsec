@@ -1,0 +1,15 @@
+# Set variables
+CC=gcc
+
+# Just compile
+example1: example1.o
+	gcc -m32 -o example1 example1.c
+
+# Compile w/o stack protection
+no-stack-guard: 
+	gcc -m32 -o example1 example1.c -f-no-stack-protector
+
+# Cleanup all the rtf files generated
+.PHONY: clean
+clean:
+	rm *.rtf

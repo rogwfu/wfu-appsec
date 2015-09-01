@@ -1,0 +1,34 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\fmodern\fprq1\fcharset0;}}{\colortbl;\red136\green136\blue136;\red186\green33\blue33;\red0\green68\blue221;\red102\green102\blue102;\red64\green128\blue128;\red160\green160\blue0;\red25\green23\blue124;\red0\green128\blue0;\red187\green102\blue136;\red187\green102\blue34;\red136\green0\blue0;\red170\green34\blue255;\red153\green153\blue153;\red0\green160\blue0;\red160\green0\blue0;\red255\green0\blue0;\red128\green0\blue128;\red176\green0\blue64;\red0\green0\blue255;\red187\green187\blue187;\red188\green122\blue0;\red0\green0\blue128;\red125\green144\blue41;\red210\green65\blue58;}\f0{\cf21 #}{\cf21 undef _FORTIFY_SOURCE}{\cf21 \par
+}{\cf21 #}{\cf21 include <stdio.h>}{\cf21 \par
+}{\cf21 #}{\cf21 include <unistd.h>}{\cf21 \par
+}{\cf21 #}{\cf21 include <string.h>}{\cf21 \par
+}\par
+{\cf18 int} x {\cf4 =} {\cf4 3};\par
+\par
+{\cf18 void} {\cf19 be_nice_to_people}() \{\par
+    {\cf5\i // /bin/sh is usually symlinked to bash, which usually drops privs. Make\par
+}    {\cf5\i // sure we don't drop privs if we exec bash, (ie if we call system()).\par
+}    {\cf18 gid_t} gid {\cf4 =} getegid();\par
+    setresgid(gid, gid, gid);\par
+\}\par
+\par
+{\cf18 int} {\cf19 main}({\cf18 int} argc, {\cf8\b const} {\cf18 char} {\cf4 *}{\cf4 *}argv) \{\par
+    be_nice_to_people();\par
+    {\cf18 char} buf[{\cf4 100}];\par
+\par
+    {\cf8\b if}(argc {\cf4 =}{\cf4 =} {\cf4 1}) \{\par
+      errx({\cf4 1}, {\cf2 "}{\cf2 please specify an argument}{\cf10\b \\n}{\cf2 "});\par
+    \}\par
+\par
+    memset(buf, {\cf2 '\\0'}, {\cf8\b sizeof}(buf));\par
+    memcpy(buf, argv[{\cf4 1}], {\cf8\b sizeof}(buf)); \par
+\par
+    printf(buf);\par
+    printf({\cf2 "}{\cf10\b \\n}{\cf2 %d!}{\cf10\b \\n}{\cf2 "}, x); \par
+    {\cf8\b if} (x {\cf4 =}{\cf4 =} {\cf4 4}) \{\par
+        printf({\cf2 "}{\cf2 running sh...}{\cf10\b \\n}{\cf2 "});\par
+        system({\cf2 "}{\cf2 /bin/sh}{\cf2 "});\par
+    \}\par
+    {\cf8\b return} {\cf4 0};\par
+\}\par
+}

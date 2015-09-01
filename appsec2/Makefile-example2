@@ -1,0 +1,7 @@
+
+
+
+# Cleanup all the rtf files generated
+.PHONY: clean
+clean:
+	rm *.rtf

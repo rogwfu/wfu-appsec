@@ -1,0 +1,9 @@
+vuln_func:
+...
+sub    $0x98,%esp
+....
+mov    %eax,(%esp)
+call   0x8048380 <strcpy@plt>
+....
+leave
+ret

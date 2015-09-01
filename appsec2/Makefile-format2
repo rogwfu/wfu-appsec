@@ -1,0 +1,12 @@
+# Just compile
+format2: format2.o
+	gcc -m32 -o format2 format2.c
+
+# Compile w/o protections
+unprotected:
+	gcc -m32 -g -O0 -fno-stack-protector -Wno-format-security -z execstack -Wl,-z,norelro -o format2 format2.c
+
+# Cleanup all generated files 
+.PHONY: clean
+clean:
+	rm format2 format2.o
