@@ -8,6 +8,11 @@
         "atlas_name": "wfu-appsec"
     },
     "provisioners": [
+		{
+		  "type": "file",
+		  "source": "appsec2",
+		  "destination": "/tmp"
+		},
         {
             "type": "shell",
             "scripts": [
