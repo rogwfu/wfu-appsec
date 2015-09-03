@@ -35,11 +35,11 @@ install_rev_tools ()
   # IDA Pro
   cd /home/$BASEACCT
   if  [ ! -d "idademo66" ]; then
-    wget -O IdaDemo.tgz "http://out7.hex-rays.com/files/idademo66_linux.tgz"
+    wget -O IdaDemo.tgz "https://out7.hex-rays.com/files/idademo68_linux.tgz"
 	tar xvzf IdaDemo.tgz
 	rm IdaDemo.tgz
-	chown -R $BASEACCT:$BASEACCT idademo66
-	su - $BASEACCT -c "ln -s idademo66/idaq idapro"
+	chown -R $BASEACCT:$BASEACCT idademo68
+	su - $BASEACCT -c "ln -s idademo68/idaq idapro"
   fi
 
   # GDB
@@ -137,6 +137,8 @@ create_user_acct()
 install_exercises ()
 {
   echo "Installing exercises"
+  ls -ladh /tmp/appsec2
+  ls -ladh /tmp
 
   # Install tool to make the stack executable
   sudo apt-get -y install execstack
