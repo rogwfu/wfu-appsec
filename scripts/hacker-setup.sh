@@ -84,7 +84,7 @@ install_metasploit ()
   su -c $BASEACCT -c "echo \"gem: --no-ri --no-rdoc\" >> /home/$BASEACCT/.gemrc"
   su -c $BASEACCT -c "echo \"install: --no-rdoc --no-ri\" >> /home/$BASEACCT/.gemrc"
   su -c $BASEACCT -c "echo \"update:  --no-rdoc --no-ri\" >> /home/$BASEACCT/.gemrc"
-  cp /tmp/shell-scripts/gemrc "/home/$BASEACCT/.gemrc"
+  cp /tmp/appsec2/gemrc "/home/$BASEACCT/.gemrc"
   cd metasploit
   echo "Install metasploit dependencies"
   apt-get -y install libpq-dev libxml2-dev libxslt1-dev libpcap-dev
