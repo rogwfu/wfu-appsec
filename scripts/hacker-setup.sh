@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/zsh
 
 #http://stackoverflow.com/questions/23182765/how-to-install-ia32-libs-in-ubuntu-14-04-lts
 
@@ -145,36 +145,39 @@ install_exercises ()
 
   # Install the stack examples
   for i in `ls /tmp/appsec2/stack*.c` ; do
-	create_user_acct $i:t:r
-	cp $i /home/$i:t:r/
-	cp /tmp/appsec2/Makefile-$i:t:r /home/$i:t:r/Makefile
-	#cp /tmp/appsec2/$i:t:r-key.txt /home/$i:t:r/key.txt
-	#su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r ; chmod 400 key.txt"
-	chown $i:t:r:$i:t:r /home/$i:t:r/*
-	su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r"
-#	usermod -s /usr/sbin/nologin $i:t:r
+	acct=$(echo $i | cut -d'.' -f1 | cut -d'/' -f4)
+	create_user_acct $acct 
+	cp $i /home/$acct/
+	cp /tmp/appsec2/Makefile-$acct /home/$acct/Makefile
+	#cp /tmp/appsec2/$acct-key.txt /home/$acct/key.txt
+	#su - $acct -c "cd /home/$acct ; make unprotected ; chmod +s $acct ; chmod 400 key.txt"
+	chown $acct:$acct /home/$acct/*
+	su - $acct -c "cd /home/$acct ; make unprotected ; chmod +s $acct"
+#	usermod -s /usr/sbin/nologin $acct
   done
 
   # Install the format string examples
   for i in `ls /tmp/appsec2/format*.c` ; do
-	create_user_acct $i:t:r
-	cp $i /home/$i:t:r/
-	cp /tmp/appsec2/Makefile-$i:t:r /home/$i:t:r/Makefile
-	#cp /tmp/appsec2/$i:t:r-key.txt /home/$i:t:r/key.txt
-	#su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r ; chmod 400 key.txt"
-	chown $i:t:r:$i:t:r /home/$i:t:r/*
-	su - $i:t:r -c "cd /home/$i:t:r ; make unprotected ; chmod +s $i:t:r"
-#	usermod -s /usr/sbin/nologin $i:t:r
+	acct=$(echo $i | cut -d'.' -f1 | cut -d'/' -f4)
+	create_user_acct $acct
+	cp $i /home/$acct/
+	cp /tmp/appsec2/Makefile-$acct /home/$acct/Makefile
+	#cp /tmp/appsec2/$acct-key.txt /home/$acct/key.txt
+	#su - $acct -c "cd /home/$acct ; make unprotected ; chmod +s $acct ; chmod 400 key.txt"
+	chown $acct:$acct /home/$acct/*
+	su - $acct -c "cd /home/$acct ; make unprotected ; chmod +s $acct"
+#	usermod -s /usr/sbin/nologin $acct
   done
 
   # Install the reverse engineering bomb
   for i in `ls /tmp/appsec2/rev*` ; do 
-	create_user_acct $i:t:r
-	cp $i /home/$i:t:r/
-	cp /tmp/appsec2/README-$i:t:r.txt /home/$i:t:r/README.txt
-	chown $i:t:r:$i:t:r /home/$i:t:r/*
-	chmod a+x /home/$i:t:r/$i:t:r
-#	usermod -s /usr/sbin/nologin $i:t:r
+	acct=$(echo $i | cut -d'.' -f1 | cut -d'/' -f4)
+	create_user_acct $acct
+	cp $i /home/$acct/
+	cp /tmp/appsec2/README-$acct.txt /home/$acct/README.txt
+	chown $acct:$acct /home/$acct/*
+	chmod a+x /home/$acct/$acct
+#	usermod -s /usr/sbin/nologin $acct
   done
 
 }
